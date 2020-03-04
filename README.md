@@ -4,7 +4,6 @@ Hiring team will use to track hiring in different regions/sites to better inform
 
 Each Site would have a table like this:
 
-| 			| 
 | Position			|Hired Staff | Not Hired Apps |Apps Needed	 |
 | :-----------: |:-------------:| :-------------:|:-------------:|
 | Leads	        | 25		    | 	13	 		 |	 12	 		 |
