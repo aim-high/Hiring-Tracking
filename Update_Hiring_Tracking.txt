@@ -1,0 +1,54 @@
+# PURPOSE:		Get at a glance details for staff hiring, broken down by site and position.
+# PARAMETERS: 	JSON object - SiteName_c
+# DEPENDENCIES:	None
+# CONTEXT:		Staff Hiring Tracking
+# HISTORY: 		Created:	2020-March-03 by Erica Ching (eching@aimhigh.org)
+# NOTES:		None
+
+#----------------------------------------------------------------------------------------
+
+Set Error Capture [ On ]
+Allow User Abort [ Off ]
+
+Show Custom Dialog [ "Region" ;  "Select region for staff stats."]
+If [ Get (LastMessageChoice) = 2 ]
+	Show Custom Dialog [ "Region" ; "Select region for staff stats."]
+	If [ Get (LastMessageChoice) = 1 ]
+		Set Variable [ $region ; Value: "East Bay" ]
+	Else If [ Get (LastMessageChoice) = 2 ]
+		Set Variable [ $region ; Value: "Tahoe/Truckee" ]
+	End If
+Else If [ Get (LastMessageChoice) = 1 ]
+	Set Variable [ $region ; Value: "San Francisco" ]
+Else
+	Show Custom Dialog [ "Region" ; "Select which region" ]
+	If [ Get (LastMessageChoice) = 1 ]
+		Set Variable [ $region ; Value: "North Bay" ]
+	Else If [ Get (LastMessageChoice) = 2 ]
+		Set Variable [ $region ; Value: "South Bay/Peninsula" ]
+	End If
+End If
+
+# Find sites in selected region
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Show Custom Dialog [ "Found" ; $count ]
+Freeze Window
+
+# Loop through found set of sites
+Loop
+	# Create JSON object to pass to Count Hired Staff
+	Set Variable [ $site ; Value: SIT__Site::Name ]
+	Perform Script [ Specified: From list ; "Count Hired Staff" ; Parameter: $site ]
+	
+	# Parse returned JSON - ****later change Variable to Field****
+	Set Variable [ $returnedJSON ; Value: Get (ScriptResult) ]
+	Set Field [ SIT_STY__SiteYearCurrent::______ ; JSONGetElement ( $returnedJSON ; "leadTeacherHired" )]
+	Set Field [ SIT_STY__SiteYearCurrent::______ ; JSONGetElement ( $returnedJSON ; "assistantTeacherHired" )]
+	Set Field [ SIT_STY__SiteYearCurrent::______ ; JSONGetElement ( $returnedJSON ; "specialistHired )]
+	Set Field [ SIT_STY__SiteYearCurrent::______ ; JSONGetElement ( $returnedJSON ; "internHired" )]
+	Go to Record/Request/Page [ Next ; Exit after last: On ]
+End Loop
+Sort Records [ Restore ; With dialog: Off ]
+
+Exit Script [ Text Result: $null ]

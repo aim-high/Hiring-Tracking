@@ -1,0 +1,71 @@
+# PURPOSE: 		Get at a glance details for staff hiring, broken down by site and position.
+# PARAMETERS: 	SiteName_c
+# DEPENDENCIES: Called from parent script 'Update Hiring Tracking'
+# CONTEXT:		N/A
+# HISTORY:		Created: 2020-March-03 by Erica Ching (eching@aimhigh.org)
+# NOTES:		None
+
+#-----------------------------------------------------------------------------------
+
+New Window [ Style: Document ; Using layout: "Staff App Detail" (SFA__StaffApplication) ]
+Show All Records
+Set Variable [ $site ; Value: Get (ScriptParameter) ]
+
+# Set site and year ***Change year when needed***
+Set Variable [ $returnJSON ; Value: JSONFormatElements (JSONSetElement ( $returnJSON ; "site" ; $site ; 1 ))]
+Set Variable [ $year ; Value: 2019 ]
+
+# Count Lead Teachers - Hired
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements (JSONSetElement ( $returnJSON ; "leadTeacherHired" ; $count ; 2 ))]
+
+# Count Lead Teachers - Not Hired yet
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements ( JSONSetElement ($returnJSON ; "leadTeacherNotHired" ; $count ; 2 ))]
+
+# Count Assistant Teachers - Hired
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements (JSONSetElement ( $returnJSON ; "assistantTeacherHired" ; $count ; 2 ))]
+
+# Count Assistant Teachers - Not Hired yet
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements ( JSONSetElement ($returnJSON ; "assistantTeacherNotHired" ; $count ; 2 ))]
+
+# Count Specialists - Hired
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements (JSONSetElement ( $returnJSON ; "specialistHired" ; $count ; 2 ))]
+
+# Count Specialists - Not Hired yet
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements ( JSONSetElement ($returnJSON ; "specialistNotHired" ; $count ; 2 ))]
+
+# Count Interns - Hired
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements (JSONSetElement ( $returnJSON ; "internHired" ; $count ; 2 ))]
+
+# Count Interns - Not Hired yet
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements ( JSONSetElement ($returnJSON ; "internNotHired" ; $count ; 2 ))]
+
+# Count Volunteers - Hired
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements (JSONSetElement ( $returnJSON ; "volunteerHired" ; $count ; 2 ))]
+
+# Count Volunteers - Not Hired yet
+Perform Find [ Restore ]
+Set Variable [ $count ; Value: Get (FoundCount) ]
+Set Variable [ $returnJSON ; Value: JSONFormatElements ( JSONSetElement ($returnJSON ; "volunteerNotHired" ; $count ; 2 ))]
+
+Show Custom Dialog [ "Returned Values" ; $returnJSON ]
+
+Close Window [ Current Window ]
+Exit Script [ Text Result: $returnJSON ]
